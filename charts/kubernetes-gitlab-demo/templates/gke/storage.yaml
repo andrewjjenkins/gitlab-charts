@@ -10,7 +10,6 @@ metadata:
     kubernetes.io/cluster-service: "true"
 provisioner: kubernetes.io/azure-disk
 parameters:
-  skuName: Premium_LRS
-  location: eastus
-  storageAccount: gitlabstorage
+  skuName: Standard_LRS
+  location: northcentralus 
 {{- end }}

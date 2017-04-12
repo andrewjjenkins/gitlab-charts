@@ -18,7 +18,7 @@
 
 # Optional variables
 gitlabNamespace: gitlab
-gitlabImage: gitlab/gitlab-ce:9.0.5-ce.0
+gitlabImage: gitlab/gitlab-ce:9.0.4-ce.0
 postgresPassword: NDl1ZjNtenMxcWR6NXZnbw==
 initialSharedRunnersRegistrationToken: "tQtCbx5UZy_ByS7FyzUH"
 mattermostAppSecret: NDl1ZjNtenMxcWR6NXZnbw==

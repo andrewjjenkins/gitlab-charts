@@ -8,7 +8,9 @@ metadata:
     storageclass.beta.kubernetes.io/is-default-class: "true"
   labels:
     kubernetes.io/cluster-service: "true"
-provisioner: kubernetes.io/gce-pd
+provisioner: kubernetes.io/azure-disk
 parameters:
-  type: pd-ssd
+  skuName: Premium_LRS
+  location: eastus
+  storageAccount: gitlabstorage
 {{- end }}

@@ -19,6 +19,7 @@ spec:
           containerPort: 6379
         volumeMounts:
         - mountPath: /var/lib/redis
+          subPath: redis
           name: data
         livenessProbe:
           exec:
@@ -37,4 +38,4 @@ spec:
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: gitlab-redis-storage
+          claimName: gitlab-rails-storage

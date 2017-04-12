@@ -37,6 +37,7 @@ spec:
           containerPort: 5432
         volumeMounts:
         - mountPath: /var/lib/postgresql
+          subPath: postgresql
           name: data
         - mountPath: /docker-entrypoint-initdb.d
           name: initdb
@@ -64,7 +65,7 @@ spec:
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: gitlab-postgresql-storage
+          claimName: gitlab-rails-storage
       - name: initdb
         configMap:
           name: gitlab-postgresql-initdb

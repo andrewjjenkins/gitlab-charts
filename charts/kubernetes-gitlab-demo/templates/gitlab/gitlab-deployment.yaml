@@ -171,8 +171,10 @@ spec:
           mountPath: /etc/gitlab
         - name: data
           mountPath: /gitlab-data
+          subPath: gitlab-data
         - name: registry
           mountPath: /gitlab-registry
+          subPath: gitlab-registry
         livenessProbe:
           httpGet:
             path: /help

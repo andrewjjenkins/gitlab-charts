@@ -1,0 +1,196 @@
+# Default values for kubernetes-gitlab-demo.
+# This is a YAML-formatted file.
+
+# Required variables
+
+# baseDomain is the top-most part of the domain. Subdomains will be generated
+# for gitlab, mattermost, registry, and prometheus.
+# Recommended to set up an A record on the DNS to *.your-domain.com to point to
+# the baseIP
+# e.g. *.your-domain.com.	A	300	baseIP
+#baseDomain: your-domain.com
+
+# legoEmail is a valid email address used by Let's Encrypt. It does not have to
+# be at the baseDomain.
+#legoEmail: you@example.com
+
+# Optional variables
+# baseIP is an externally provisioned static IP address to use instead of the provisioned one.
+#baseIP: 1.1.1.1
+# `ce` or `ee`
+postgresPassword: NDl1ZjNtenMxcWR6NXZnbw==
+initialSharedRunnersRegistrationToken: "tQtCbx5UZy_ByS7FyzUH"
+mattermostAppSecret: NDl1ZjNtenMxcWR6NXZnbw==
+mattermostAppUID: aadas
+redisImage: redis:3.2.4
+redisDedicatedStorage: true
+redisStorageSize: 5Gi
+postgresImage: postgres:9.6.1
+# If you disable postgresDedicatedStorage, you should consider bumping up gitlabRailsStorageSize
+postgresDedicatedStorage: true
+postgresStorageSize: 30Gi
+gitlabRailsStorageSize: 30Gi
+gitlabRegistryStorageSize: 30Gi
+gitlabConfigStorageSize: 1Gi
+gitlabRunnerImage: gitlab/gitlab-runner:alpine-v9.1.0
+# Valid values for provider are `gke` for Google Container Engine. Leaving it blank (or any othervalue) will disable fast disk options.
+provider: gke
+healthCheckToken: 'SXBAQichEJasbtDSygrD'
+# Optional, for GitLab EE images only
+#gitlabEELicense: base64-encoded-license
+
+gitlab-ce:
+  image: gitlab/gitlab-ce:9.1.2-ce.0
+
+  externalUrl: https://gitlab.35.184.243.42.nip.io
+
+  postReconfigureScript: |
+    read -r -d '' GITLAB_POST_RECONFIGURE_CODE <<-EOM
+      include Gitlab::CurrentSettings
+      Doorkeeper::Application.where(uid: ENV["MATTERMOST_APP_UID"]).first_or_create(
+        name: "GitLab Mattermost",
+        secret: ENV["MATTERMOST_APP_SECRET"],
+        redirect_uri: "https://mattermost.35.184.243.42.nip.io/signup/gitlab/complete\r\nhttps://mattermost.35.184.243.42.nip.io/login/gitlab/complete")
+    EOM
+    /opt/gitlab/bin/gitlab-rails runner -e production "$GITLAB_POST_RECONFIGURE_CODE"
+
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: 'true'
+
+    hosts:
+      - gitlab.35.184.243.42.nip.io
+      - registry.35.184.243.42.nip.io
+      - mattermost.35.184.243.42.nip.io
+      - prometheus.35.184.243.42.nip.io
+    tls:
+      - secretName: gitlab-tls
+        hosts:
+          - gitlab.35.184.243.42.nip.io
+          - registry.35.184.243.42.nip.io
+          - mattermost.35.184.243.42.nip.io
+          - prometheus.35.184.243.42.nip.io
+
+  resources:
+    ## GitLab requires a good deal of resources. We have split out Postgres and
+    ## redis, which helps some. Refer to the guidelines for larger installs.
+    ## ref: https://docs.gitlab.com/ce/install/requirements.html#hardware-requirements
+    requests:
+      memory: 2Gi
+      cpu: 500m
+    limits:
+      memory: 4Gi
+      cpu: 1
+
+  omnibusConfigRuby: |
+    unicorn['worker_processes'] = 2;
+    gitlab_rails['trusted_proxies'] = ["10.0.0.0/8","172.16.0.0/12","192.168.0.0/16"];
+    registry_external_url "https://registry.35.184.243.42.nip.io";
+    mattermost_external_url "https://mattermost.35.184.243.42.nip.io";
+
+    nginx['listen_port'] = 80
+    nginx['listen_https'] = false
+    nginx['proxy_set_headers'] = {
+      "X-Forwarded-Proto" => "https",
+      "X-Forwarded-Ssl" => "on"
+    }
+
+    registry_nginx['listen_port'] = 80
+    registry_nginx['listen_https'] = false
+    registry_nginx['proxy_set_headers'] = {
+      "X-Forwarded-Proto" => "https",
+      "X-Forwarded-Ssl" => "on"
+    }
+
+    mattermost_nginx['listen_port'] = 80
+    mattermost_nginx['listen_https'] = false
+    mattermost_nginx['proxy_set_headers'] = {
+      "X-Forwarded-Proto" => "https",
+      "X-Forwarded-Ssl" => "on"
+    }
+
+    mattermost['file_directory'] = '/gitlab-data/mattermost';
+    mattermost['sql_driver_name'] = 'postgres';
+    mattermost['sql_data_source'] = "user=#{ENV['DB_USER']} host=foolhardy-olm-postgresql.gitlab.svc.cluster.local port=5432 dbname=mattermost_production password=#{ENV['DB_PASSWORD']} sslmode=disable";
+    mattermost['gitlab_enable'] = true;
+    mattermost['gitlab_secret'] = ENV['MATTERMOST_APP_SECRET'];
+    mattermost['gitlab_id'] = ENV['MATTERMOST_APP_UID'];
+    mattermost['gitlab_scope'] = '';
+    mattermost['gitlab_auth_endpoint'] = "https://gitlab.35.184.243.42.nip.io/oauth/authorize";
+    mattermost['gitlab_token_endpoint'] = "https://gitlab.35.184.243.42.nip.io/oauth/token";
+    mattermost['gitlab_user_api_endpoint'] = "https://gitlab.35.184.243.42.nip.io/api/v3/user";
+
+gitlab-runner:
+  checkInterval: 15
+  gitlabUrl: http://gitlab:8005/
+  # runnerRegistrationToken must equal initialSharedRunnersRegistrationToken
+  runnerRegistrationToken: "tQtCbx5UZy_ByS7FyzUH"
+  namespace: gitlab
+  resources:
+    limits:
+      memory: 500Mi
+      cpu: 600m
+    requests:
+      memory: 500Mi
+      cpu: 600m
+  runners:
+    namespace: gitlab
+    privileged: true
+
+postgres:
+  cpu: 500m
+  memory: 500Mi
+
+  postgresUser: gitlab
+  postgresPassword: gitlab
+  postgresDatabase: mattermost_production
+
+  persistence:
+    size: 5Gi
+
+nginx-ingress:
+  controller:
+    config:
+      proxy-connect-timeout: "15"
+      proxy-read-timeout: "600"
+      proxy-send-imeout: "600"
+      hsts-include-subdomains: "false"
+      body-size: "512m"
+      server-name-hash-bucket-size: "256"
+
+    ## Limit the scope of the controller
+    ##
+    scope:
+      enabled: false
+      namespace: "" # defaults to .Release.Namespace
+
+    ## DaemonSet or Deployment
+    ##
+    kind: Deployment
+
+    service:
+      annotations:
+        service.beta.kubernetes.io/external-traffic: "OnlyLocal"
+      loadBalancerIP: "35.184.243.42"
+      type: LoadBalancer
+
+  tcp:
+    22: "gitlab/bob-gitlab-ce:22"
+
+kube-lego:
+  config:
+    ## Email address to use for registration with Let's Encrypt
+    ##
+    LEGO_EMAIL: dj@gitlab.com
+
+    ## Let's Encrypt API endpoint
+    ## Production: https://acme-v01.api.letsencrypt.org/directory
+    ## Staging: https://acme-staging.api.letsencrypt.org/directory
+    ##
+    LEGO_URL: https://acme-v01.api.letsencrypt.org/directory
+
+    ## kube-lego port
+    ##
+    LEGO_PORT: 8080

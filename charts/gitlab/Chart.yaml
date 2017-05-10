@@ -1,0 +1,20 @@
+name: gitlab
+version: 0.1.0
+description: "GitLab. Collaboration and source control management: code, test, and deploy together!"
+keywords:
+- git
+- ci
+- deploy
+- issue tracker
+- code review
+- wiki
+home: https://about.gitlab.com
+sources:
+- https://hub.docker.com/r/gitlab/gitlab-ce/
+- https://hub.docker.com/r/gitlab/gitlab-ee/
+- https://docs.gitlab.com/omnibus/
+icon: https://gitlab.com/uploads/group/avatar/6543/gitlab-logo-square.png
+maintainers:
+- name: GitLab Inc.
+  email: support@gitlab.com
+- name: DJ Mountney

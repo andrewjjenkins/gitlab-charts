@@ -1,6 +1,7 @@
 image: registry.gitlab.com/charts/alpine-helm
 
 before_script:
+  - ruby -v
   - helm init --client-only
   - helm repo add gitlab https://charts.gitlab.io
 
@@ -16,11 +17,17 @@ pages:
   script:
     - helm lint charts/*
     - mkdir -p public
+    - bundle install --jobs 4 --path vendor
+    - bundle exec kramdown --input GFM --template document --syntax-highlighter rouge README.md > public/index.html
     - for chart in charts/*; do helm dep up $chart; done
     - (cd public; helm package ../charts/*)
     - helm repo index public --url https://charts.gitlab.io
   artifacts:
     paths:
     - public
+  cache:
+    key: "$CI_BUILD_NAME/$CI_BUILD_REF_NAME"
+    paths:
+      - vendor/ruby
   only:
   - master

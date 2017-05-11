@@ -121,3 +121,17 @@ Otherise use the ceImage
 {{- .Values.ceImage | quote -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Return the postReconfigureScript value
+*/}}
+{{- define "gitlab.postReconfigureScript" -}}
+{{- default "" .Values.postReconfigureScript -}}
+{{- end -}}
+
+{{/*
+Return the omnibusConfigRuby value
+*/}}
+{{- define "gitlab.omnibusConfigRuby" -}}
+{{- default "" .Values.omnibusConfigRuby -}}
+{{- end -}}

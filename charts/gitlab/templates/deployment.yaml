@@ -1,4 +1,5 @@
 {{- if default "" .Values.externalUrl }}
+{{- $postReconfigureScript := include "gitlab.postReconfigureScript" . }}
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -31,7 +32,7 @@ spec:
             configMapKeyRef:
               name: {{ template "fullname" . }}
               key: gitlab_omnibus_config
-        {{- if default "" .Values.postReconfigureScript }}
+        {{- if $postReconfigureScript }}
         - name: GITLAB_POST_RECONFIGURE_SCRIPT
           value: "/bin/bash /scripts/post_reconfigure_script"
         {{- end }}
@@ -117,7 +118,7 @@ spec:
           successThreshold: 1
           failureThreshold: 3
         volumeMounts:
-        {{- if default "" .Values.postReconfigureScript }}
+        {{- if $postReconfigureScript }}
         - name: scripts
           mountPath: /scripts
         {{- end }}
@@ -130,7 +131,7 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 10 }}
       volumes:
-      {{- if default "" .Values.postReconfigureScript }}
+      {{- if $postReconfigureScript }}
       - name: scripts
         configMap:
           name: {{ template "fullname" . }}-scripts

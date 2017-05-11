@@ -1,0 +1,16 @@
+gitlab:
+  externalUrl: https://gitlab.35.184.243.42.nip.io
+
+  ingress:
+    hosts:
+      - gitlab.35.184.243.42.nip.io
+      - registry.35.184.243.42.nip.io
+      - mattermost.35.184.243.42.nip.io
+      - prometheus.35.184.243.42.nip.io
+    tls:
+      - secretName: gitlab-tls
+        hosts:
+          - gitlab.35.184.243.42.nip.io
+          - registry.35.184.243.42.nip.io
+          - mattermost.35.184.243.42.nip.io
+          - prometheus.35.184.243.42.nip.io

@@ -1,14 +1,10 @@
 dependencies:
-- name: gitlab-ce
-  version: 0.1.10
+- name: gitlab
+  version: 0.1.0
   repository: https://charts.gitlab.io/
 - name: gitlab-runner
   version: 0.1.2
   repository: https://charts.gitlab.io/
-- name: postgresql
-  version: 0.6.0
-  repository: https://kubernetes-charts.storage.googleapis.com/
-  condition: postgresql.enabled
 - name: nginx-ingress
   version: 0.3.2
   repository: https://kubernetes-charts.storage.googleapis.com/

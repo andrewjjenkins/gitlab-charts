@@ -1,3 +1,4 @@
+{{- $postReconfigureScript := include "gitlab.postReconfigureScript" . -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -9,4 +10,4 @@ metadata:
     heritage: "{{ .Release.Service }}"
 data:
   post_reconfigure_script: |
-{{ default "" .Values.postReconfigureScript | indent 4 }}
+{{ $postReconfigureScript | indent 4 }}

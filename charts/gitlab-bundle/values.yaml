@@ -1,45 +1,4 @@
-# Default values for kubernetes-gitlab-demo.
-# This is a YAML-formatted file.
-
-# Required variables
-
-# baseDomain is the top-most part of the domain. Subdomains will be generated
-# for gitlab, mattermost, registry, and prometheus.
-# Recommended to set up an A record on the DNS to *.your-domain.com to point to
-# the baseIP
-# e.g. *.your-domain.com.	A	300	baseIP
-#baseDomain: your-domain.com
-
-# legoEmail is a valid email address used by Let's Encrypt. It does not have to
-# be at the baseDomain.
-#legoEmail: you@example.com
-
-# Optional variables
-# baseIP is an externally provisioned static IP address to use instead of the provisioned one.
-#baseIP: 1.1.1.1
-# `ce` or `ee`
-postgresPassword: NDl1ZjNtenMxcWR6NXZnbw==
-initialSharedRunnersRegistrationToken: "tQtCbx5UZy_ByS7FyzUH"
-mattermostAppSecret: NDl1ZjNtenMxcWR6NXZnbw==
-mattermostAppUID: aadas
-redisImage: redis:3.2.4
-redisDedicatedStorage: true
-redisStorageSize: 5Gi
-postgresImage: postgres:9.6.1
-# If you disable postgresDedicatedStorage, you should consider bumping up gitlabRailsStorageSize
-postgresDedicatedStorage: true
-postgresStorageSize: 30Gi
-gitlabRailsStorageSize: 30Gi
-gitlabRegistryStorageSize: 30Gi
-gitlabConfigStorageSize: 1Gi
-gitlabRunnerImage: gitlab/gitlab-runner:alpine-v9.1.0
-# Valid values for provider are `gke` for Google Container Engine. Leaving it blank (or any othervalue) will disable fast disk options.
-provider: gke
-healthCheckToken: 'SXBAQichEJasbtDSygrD'
-# Optional, for GitLab EE images only
-#gitlabEELicense: base64-encoded-license
-
-gitlab-ce:
+gitlab:
   image: gitlab/gitlab-ce:9.1.2-ce.0
 
   externalUrl: https://gitlab.35.184.243.42.nip.io

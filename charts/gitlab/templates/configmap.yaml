@@ -1,3 +1,4 @@
+{{- $omnibusConfigRuby := include "gitlab.omnibusConfigRuby" . -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -47,4 +48,4 @@ data:
       'redis.addr' => "#{ENV['REDIS_HOST']}:6379",
       'redis.password' => "#{ENV['REDIS_PASSWORD']}"
     }
-{{ .Values.omnibusConfigRuby | indent 4 }}
+{{ $omnibusConfigRuby | indent 4 }}

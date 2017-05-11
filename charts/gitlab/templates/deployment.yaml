@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: {{ template "fullname" . }}
-        image: {{ template "image" . }}
+        image: {{ template "gitlab.image" . }}
         imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
         env:
         ## General GitLab Configs
@@ -47,7 +47,7 @@ spec:
         ## DB configuration
         ##
         - name: DB_HOST
-          value: {{ template "dbHost" . }}
+          value: {{ template "gitlab.dbHost" . }}
         - name: DB_USER
           valueFrom:
             secretKeyRef:
@@ -59,11 +59,11 @@ spec:
               name: {{ template "fullname" . }}
               key: db-password
         - name: DB_DATABASE
-          value: {{ template "dbDatabase" . }}
+          value: {{ template "gitlab.dbDatabase" . }}
         ## Redis configuration
         ##
         - name: REDIS_HOST
-          value: {{ template "redisHost" . }}
+          value: {{ template "gitlab.redisHost" . }}
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:

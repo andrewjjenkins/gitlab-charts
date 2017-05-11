@@ -2,7 +2,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "fullname" . }}-registry
+  name: {{ template "gitlab.fullname" . }}-registry
   annotations:
   {{- if .Values.persistence.gitlabRegistry.storageClass }}
     volume.beta.kubernetes.io/storage-class: {{ .Values.persistence.gitlabRegistry.storageClass | quote }}

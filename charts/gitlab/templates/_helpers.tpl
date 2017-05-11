@@ -2,7 +2,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "name" -}}
+{{- define "gitlab.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -10,7 +10,7 @@ Expand the name of the chart.
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
-{{- define "fullname" -}}
+{{- define "gitlab.fullname" -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -36,7 +36,7 @@ Return the db hostname
 If the postgresql dependency is enabled, it will return the postgresql fullname
 Otherwise it will return the set value
 */}}
-{{- define "dbHost" -}}
+{{- define "gitlab.dbHost" -}}
 {{- if .Values.postgresql.enabled -}}
 {{- template "postgresql.fullname" . -}}
 {{- else -}}
@@ -49,7 +49,7 @@ Return the db database name
 If the postgresql dependency is enabled, it will return the postgresql postgresDatabase
 Otherwise it will return the set value
 */}}
-{{- define "dbDatabase" -}}
+{{- define "gitlab.dbDatabase" -}}
 {{- if .Values.postgresql.enabled -}}
 {{- .Values.postgresql.postgresDatabase | quote -}}
 {{- else -}}
@@ -62,7 +62,7 @@ Return the db username 64bit encoded for secrets
 If the postgresql dependency is enabled, it will return the postgresql user
 Otherwise it will return the set value
 */}}
-{{- define "encodeDbUsername" -}}
+{{- define "gitlab.encodeDbUsername" -}}
 {{- if .Values.postgresql.enabled -}}
 {{- .Values.postgresql.postgresUser | b64enc | quote -}}
 {{- else -}}
@@ -75,7 +75,7 @@ Return the db password 64bit encoded for secrets
 If the postgresql dependency is enabled, it will return the postgresql password
 Otherwise it will return the set value
 */}}
-{{- define "encodeDbPassword" -}}
+{{- define "gitlab.encodeDbPassword" -}}
 {{- if .Values.postgresql.enabled -}}
 {{- .Values.postgresql.postgresPassword | b64enc | quote -}}
 {{- else -}}
@@ -88,7 +88,7 @@ Return the redis hostname
 If the redis dependency is enabled, it will return the redis fullname
 Otherwise it will return the set value
 */}}
-{{- define "redisHost" -}}
+{{- define "gitlab.redisHost" -}}
 {{- if .Values.redis.enabled -}}
 {{- template "redis.fullname" . -}}
 {{- else -}}
@@ -101,7 +101,7 @@ Return the redis password 64bit encoded for secrets
 If the redis dependency is enabled, it will return redisPassword
 Otherwise it will return the set value
 */}}
-{{- define "encodeRedisPassword" -}}
+{{- define "gitlab.encodeRedisPassword" -}}
 {{- if .Values.redis.enabled -}}
 {{- .Values.redis.redisPassword | b64enc | quote -}}
 {{- else -}}
@@ -114,7 +114,7 @@ Return the container image to use based on the edition being used (CE or EE)
 If edition=EE then use eeImage value
 Otherise use the ceImage
 */}}
-{{- define "image" -}}
+{{- define "gitlab.image" -}}
 {{- if eq (upper .Values.edition) "EE" -}}
 {{- .Values.eeImage | quote -}}
 {{- else -}}

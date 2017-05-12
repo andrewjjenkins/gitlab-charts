@@ -1,36 +1,31 @@
-gitlab:
-  image: gitlab/gitlab-ce:9.1.2-ce.0
+global:
+  mattermostExternalUrl: http://mattermost.example.com
+  registryExternalUrl: http://registry.example.com
 
-  externalUrl: https://gitlab.35.184.243.42.nip.io
+gitlab:
+  externalUrl: http://gitlab.example.com
 
   postReconfigureScript: |
-    read -r -d '' GITLAB_POST_RECONFIGURE_CODE <<-EOM
-      include Gitlab::CurrentSettings
-      Doorkeeper::Application.where(uid: ENV["MATTERMOST_APP_UID"]).first_or_create(
-        name: "GitLab Mattermost",
-        secret: ENV["MATTERMOST_APP_SECRET"],
-        redirect_uri: "https://mattermost.35.184.243.42.nip.io/signup/gitlab/complete\r\nhttps://mattermost.35.184.243.42.nip.io/login/gitlab/complete")
-    EOM
-    /opt/gitlab/bin/gitlab-rails runner -e production "$GITLAB_POST_RECONFIGURE_CODE"
+    echo 'bob'
 
-  ingress:
-    enabled: true
-    annotations:
-      kubernetes.io/ingress.class: nginx
-      kubernetes.io/tls-acme: 'true'
-
-    hosts:
-      - gitlab.35.184.243.42.nip.io
-      - registry.35.184.243.42.nip.io
-      - mattermost.35.184.243.42.nip.io
-      - prometheus.35.184.243.42.nip.io
-    tls:
-      - secretName: gitlab-tls
-        hosts:
-          - gitlab.35.184.243.42.nip.io
-          - registry.35.184.243.42.nip.io
-          - mattermost.35.184.243.42.nip.io
-          - prometheus.35.184.243.42.nip.io
+  # ingress:
+  #   enabled: true
+  #   annotations:
+  #     kubernetes.io/ingress.class: nginx
+  #     kubernetes.io/tls-acme: 'true'
+  #
+  #   hosts:
+  #     - gitlab.35.184.243.42.nip.io
+  #     - registry.35.184.243.42.nip.io
+  #     - mattermost.35.184.243.42.nip.io
+  #     - prometheus.35.184.243.42.nip.io
+  #   tls:
+  #     - secretName: gitlab-tls
+  #       hosts:
+  #         - gitlab.35.184.243.42.nip.io
+  #         - registry.35.184.243.42.nip.io
+  #         - mattermost.35.184.243.42.nip.io
+          # - prometheus.35.184.243.42.nip.io
 
   resources:
     ## GitLab requires a good deal of resources. We have split out Postgres and
@@ -46,110 +41,76 @@ gitlab:
   omnibusConfigRuby: |
     unicorn['worker_processes'] = 2;
     gitlab_rails['trusted_proxies'] = ["10.0.0.0/8","172.16.0.0/12","192.168.0.0/16"];
-    registry_external_url "https://registry.35.184.243.42.nip.io";
-    mattermost_external_url "https://mattermost.35.184.243.42.nip.io";
 
-    nginx['listen_port'] = 80
-    nginx['listen_https'] = false
-    nginx['proxy_set_headers'] = {
-      "X-Forwarded-Proto" => "https",
-      "X-Forwarded-Ssl" => "on"
-    }
+# gitlab-runner:
+#   checkInterval: 15
+#   gitlabUrl: http://gitlab:8005/
+#   # runnerRegistrationToken must equal initialSharedRunnersRegistrationToken
+#   runnerRegistrationToken: "tQtCbx5UZy_ByS7FyzUH"
+#   namespace: gitlab
+#   resources:
+#     limits:
+#       memory: 500Mi
+#       cpu: 600m
+#     requests:
+#       memory: 500Mi
+#       cpu: 600m
+#   runners:
+#     namespace: gitlab
+#     privileged: true
+#
+# postgres:
+#   cpu: 500m
+#   memory: 500Mi
+#
+#   postgresUser: gitlab
+#   postgresPassword: gitlab
+#   postgresDatabase: mattermost_production
+#
+#   persistence:
+#     size: 5Gi
 
-    registry_nginx['listen_port'] = 80
-    registry_nginx['listen_https'] = false
-    registry_nginx['proxy_set_headers'] = {
-      "X-Forwarded-Proto" => "https",
-      "X-Forwarded-Ssl" => "on"
-    }
-
-    mattermost_nginx['listen_port'] = 80
-    mattermost_nginx['listen_https'] = false
-    mattermost_nginx['proxy_set_headers'] = {
-      "X-Forwarded-Proto" => "https",
-      "X-Forwarded-Ssl" => "on"
-    }
-
-    mattermost['file_directory'] = '/gitlab-data/mattermost';
-    mattermost['sql_driver_name'] = 'postgres';
-    mattermost['sql_data_source'] = "user=#{ENV['DB_USER']} host=foolhardy-olm-postgresql.gitlab.svc.cluster.local port=5432 dbname=mattermost_production password=#{ENV['DB_PASSWORD']} sslmode=disable";
-    mattermost['gitlab_enable'] = true;
-    mattermost['gitlab_secret'] = ENV['MATTERMOST_APP_SECRET'];
-    mattermost['gitlab_id'] = ENV['MATTERMOST_APP_UID'];
-    mattermost['gitlab_scope'] = '';
-    mattermost['gitlab_auth_endpoint'] = "https://gitlab.35.184.243.42.nip.io/oauth/authorize";
-    mattermost['gitlab_token_endpoint'] = "https://gitlab.35.184.243.42.nip.io/oauth/token";
-    mattermost['gitlab_user_api_endpoint'] = "https://gitlab.35.184.243.42.nip.io/api/v3/user";
-
-gitlab-runner:
-  checkInterval: 15
-  gitlabUrl: http://gitlab:8005/
-  # runnerRegistrationToken must equal initialSharedRunnersRegistrationToken
-  runnerRegistrationToken: "tQtCbx5UZy_ByS7FyzUH"
-  namespace: gitlab
-  resources:
-    limits:
-      memory: 500Mi
-      cpu: 600m
-    requests:
-      memory: 500Mi
-      cpu: 600m
-  runners:
-    namespace: gitlab
-    privileged: true
-
-postgres:
-  cpu: 500m
-  memory: 500Mi
-
-  postgresUser: gitlab
-  postgresPassword: gitlab
-  postgresDatabase: mattermost_production
-
-  persistence:
-    size: 5Gi
-
-nginx-ingress:
-  controller:
-    config:
-      proxy-connect-timeout: "15"
-      proxy-read-timeout: "600"
-      proxy-send-imeout: "600"
-      hsts-include-subdomains: "false"
-      body-size: "512m"
-      server-name-hash-bucket-size: "256"
-
-    ## Limit the scope of the controller
-    ##
-    scope:
-      enabled: false
-      namespace: "" # defaults to .Release.Namespace
-
-    ## DaemonSet or Deployment
-    ##
-    kind: Deployment
-
-    service:
-      annotations:
-        service.beta.kubernetes.io/external-traffic: "OnlyLocal"
-      loadBalancerIP: "35.184.243.42"
-      type: LoadBalancer
-
-  tcp:
-    22: "gitlab/bob-gitlab-ce:22"
-
-kube-lego:
-  config:
-    ## Email address to use for registration with Let's Encrypt
-    ##
-    LEGO_EMAIL: dj@gitlab.com
-
-    ## Let's Encrypt API endpoint
-    ## Production: https://acme-v01.api.letsencrypt.org/directory
-    ## Staging: https://acme-staging.api.letsencrypt.org/directory
-    ##
-    LEGO_URL: https://acme-v01.api.letsencrypt.org/directory
-
-    ## kube-lego port
-    ##
-    LEGO_PORT: 8080
+# nginx-ingress:
+#   controller:
+#     config:
+#       proxy-connect-timeout: "15"
+#       proxy-read-timeout: "600"
+#       proxy-send-imeout: "600"
+#       hsts-include-subdomains: "false"
+#       body-size: "512m"
+#       server-name-hash-bucket-size: "256"
+#
+#     ## Limit the scope of the controller
+#     ##
+#     scope:
+#       enabled: false
+#       namespace: "" # defaults to .Release.Namespace
+#
+#     ## DaemonSet or Deployment
+#     ##
+#     kind: Deployment
+#
+#     service:
+#       annotations:
+#         service.beta.kubernetes.io/external-traffic: "OnlyLocal"
+#       loadBalancerIP: "35.184.243.42"
+#       type: LoadBalancer
+#
+#   tcp:
+#     22: "gitlab/bob-gitlab-ce:22"
+#
+# kube-lego:
+#   config:
+#     ## Email address to use for registration with Let's Encrypt
+#     ##
+#     LEGO_EMAIL: dj@gitlab.com
+#
+#     ## Let's Encrypt API endpoint
+#     ## Production: https://acme-v01.api.letsencrypt.org/directory
+#     ## Staging: https://acme-staging.api.letsencrypt.org/directory
+#     ##
+#     LEGO_URL: https://acme-v01.api.letsencrypt.org/directory
+#
+#     ## kube-lego port
+#     ##
+#     LEGO_PORT: 8080

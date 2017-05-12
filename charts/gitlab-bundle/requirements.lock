@@ -1,0 +1,10 @@
+dependencies:
+- condition: ""
+  enabled: false
+  import-values: null
+  name: gitlab
+  repository: file://../gitlab
+  tags: null
+  version: 0.1.2
+digest: sha256:e1ef168e3ab0011b7bb8fe73215647eb7d0e65b3237ff3386fc282ef4f43e0bc
+generated: 2017-05-12T13:53:18.802198611-07:00

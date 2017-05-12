@@ -1,13 +1,4 @@
 dependencies:
 - name: gitlab
-  version: 0.1.0
-  repository: https://charts.gitlab.io/
-- name: gitlab-runner
   version: 0.1.2
-  repository: https://charts.gitlab.io/
-- name: nginx-ingress
-  version: 0.3.2
-  repository: https://kubernetes-charts.storage.googleapis.com/
-- name: kube-lego
-  version: 0.1.8
-  repository: https://kubernetes-charts.storage.googleapis.com/
+  repository: "file://../gitlab"

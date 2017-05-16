@@ -1,6 +1,7 @@
 global:
   mattermostExternalUrl: http://mattermost.example.com
   registryExternalUrl: http://registry.example.com
+  useStorageClass: fast
 
 gitlab:
   externalUrl: http://gitlab.example.com

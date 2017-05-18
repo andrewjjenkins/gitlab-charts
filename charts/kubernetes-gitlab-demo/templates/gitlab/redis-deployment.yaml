@@ -1,14 +1,19 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: gitlab-redis
-  namespace: gitlab
+  name: {{ template "redis.fullname" . }}
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        name: gitlab-redis
+        name: {{ template "redis.fullname" . }}
+        app: {{ template "fullname" . }}
     spec:
       containers:
       - name: redis
@@ -38,4 +43,4 @@ spec:
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: {{ if .Values.redisDedicatedStorage }} gitlab-redis-storage {{ else }} gitlab-rails-storage {{ end }}
+          claimName: {{ if .Values.redisDedicatedStorage }} {{ template "redis.fullname" . }}-storage {{ else }} {{ template "fullname" . }}-storage {{ end }}

@@ -1,15 +1,19 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: gitlab
-  namespace: gitlab
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        name: gitlab
-        app: gitlab
+        app: {{ template "fullname" . }}
+        name: {{ template "fullname" . }}
     spec:
       containers:
       - name: gitlab
@@ -25,68 +29,68 @@ spec:
         - name: GITLAB_EXTERNAL_SCHEME
           valueFrom:
             configMapKeyRef:
-              name: gitlab-config
+              name: {{ template "fullname" . }}-config
               key: external_scheme
         - name: GITLAB_EXTERNAL_HOSTNAME
           valueFrom:
             configMapKeyRef:
-              name: gitlab-config
+              name: {{ template "fullname" . }}-config
               key: external_hostname
         - name: GITLAB_REGISTRY_EXTERNAL_SCHEME
           valueFrom:
             configMapKeyRef:
-              name: gitlab-config
+              name: {{ template "fullname" . }}-config
               key: registry_external_scheme
         - name: GITLAB_REGISTRY_EXTERNAL_HOSTNAME
           valueFrom:
             configMapKeyRef:
-              name: gitlab-config
+              name: {{ template "fullname" . }}-config
               key: registry_external_hostname
         - name: GITLAB_MATTERMOST_EXTERNAL_SCHEME
           valueFrom:
             configMapKeyRef:
-              name: gitlab-config
+              name: {{ template "fullname" . }}-config
               key: mattermost_external_scheme
         - name: GITLAB_MATTERMOST_EXTERNAL_HOSTNAME
           valueFrom:
             configMapKeyRef:
-              name: gitlab-config
+              name: {{ template "fullname" . }}-config
               key: mattermost_external_hostname
         - name: POSTGRES_USER
           valueFrom:
             configMapKeyRef:
-              name: gitlab-config
+              name: {{ template "fullname" . }}-config
               key: postgres_user
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: gitlab-secrets
+              name: {{ template "fullname" . }}-secrets
               key: postgres_password
         - name: POSTGRES_DB
           valueFrom:
             configMapKeyRef:
-              name: gitlab-config
+              name: {{ template "fullname" . }}-config
               key: postgres_db
         - name: GITLAB_INITIAL_SHARED_RUNNERS_REGISTRATION_TOKEN
           valueFrom:
             secretKeyRef:
-              name: gitlab-secrets
+              name: {{ template "fullname" . }}-secrets
               key: initial_shared_runners_registration_token
         - name: MATTERMOST_APP_UID
           valueFrom:
             configMapKeyRef:
-              name: gitlab-config
+              name: {{ template "fullname" . }}-config
               key: mattermost_app_uid
         - name: MATTERMOST_APP_SECRET
           valueFrom:
             secretKeyRef:
-              name: gitlab-secrets
+              name: {{ template "fullname" . }}-secrets
               key: mattermost_app_secret
         {{- if .Values.gitlabEELicense }}
         - name: GITLAB_EE_LICENSE
           valueFrom:
             secretKeyRef:
-              name: gitlab-secrets
+              name: {{ template "fullname" . }}-secrets
               key: gitlab_ee_license
         {{- end }}
         - name: GITLAB_OMNIBUS_CONFIG
@@ -110,17 +114,17 @@ spec:
             registry['registry_http_addr'] = '0.0.0.0:8105'
 
             postgresql['enable'] = false
-            gitlab_rails['db_host'] = 'gitlab-postgresql'
+            gitlab_rails['db_host'] = '{{ template "postgresql.fullname" . }}'
             gitlab_rails['db_password'] = ENV['POSTGRES_PASSWORD']
             gitlab_rails['db_username'] = ENV['POSTGRES_USER']
             gitlab_rails['db_database'] = ENV['POSTGRES_DB']
 
             redis['enable'] = false
-            gitlab_rails['redis_host'] = 'gitlab-redis'
+            gitlab_rails['redis_host'] = '{{ template "redis.fullname" . }}'
 
             mattermost['file_directory'] = '/gitlab-data/mattermost';
             mattermost['sql_driver_name'] = 'postgres';
-            mattermost['sql_data_source'] = "user=#{ENV['POSTGRES_USER']} host=gitlab-postgresql port=5432 dbname=mattermost_production password=#{ENV['POSTGRES_PASSWORD']} sslmode=disable";
+            mattermost['sql_data_source'] = "user=#{ENV['POSTGRES_USER']} host={{ template "postgresql.fullname" . }} port=5432 dbname=mattermost_production password=#{ENV['POSTGRES_PASSWORD']} sslmode=disable";
             mattermost['gitlab_enable'] = true;
             mattermost['gitlab_secret'] = ENV['MATTERMOST_APP_SECRET'];
             mattermost['gitlab_id'] = ENV['MATTERMOST_APP_UID'];
@@ -143,11 +147,11 @@ spec:
             prometheus['listen_address'] = '0.0.0.0:9090'
             postgres_exporter['enable'] = true
             postgres_exporter['env'] = {
-              'DATA_SOURCE_NAME' => "user=#{ENV['POSTGRES_USER']} host=gitlab-postgresql port=5432 dbname=#{ENV['POSTGRES_DB']} password=#{ENV['POSTGRES_PASSWORD']} sslmode=disable"
+              'DATA_SOURCE_NAME' => "user=#{ENV['POSTGRES_USER']} host={{ template "postgresql.fullname" . }} port=5432 dbname=#{ENV['POSTGRES_DB']} password=#{ENV['POSTGRES_PASSWORD']} sslmode=disable"
             }
             redis_exporter['enable'] = true
             redis_exporter['flags'] = {
-              'redis.addr' => "gitlab-redis:6379",
+              'redis.addr' => "{{ template "redis.fullname" . }}:6379",
             }
         - name: GITLAB_POST_RECONFIGURE_CODE
           value: |
@@ -209,10 +213,10 @@ spec:
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: gitlab-rails-storage
+          claimName: {{ template "fullname" . }}-storage
       - name: registry
         persistentVolumeClaim:
-          claimName: gitlab-registry-storage
+          claimName: {{ template "fullname" . }}-registry-storage
       - name: config
         persistentVolumeClaim:
-          claimName: gitlab-config-storage
+          claimName: {{ template "fullname" . }}-config-storage

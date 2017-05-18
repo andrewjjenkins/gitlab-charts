@@ -1,8 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: gitlab-config
-  namespace: {{ .Values.gitlabNamespace }}
+  name: {{ template "fullname" . }}-config
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
 data:
   external_scheme: https
   external_hostname: gitlab.{{ .Values.baseDomain }}
@@ -17,8 +21,12 @@ data:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: gitlab-secrets
-  namespace: {{ .Values.gitlabNamespace }}
+  name: {{ template "fullname" . }}-secrets
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
 data:
   postgres_password: {{ .Values.postgresPassword }}
   initial_shared_runners_registration_token: {{ default "" .Values.initialSharedRunnersRegistrationToken | b64enc | quote }}

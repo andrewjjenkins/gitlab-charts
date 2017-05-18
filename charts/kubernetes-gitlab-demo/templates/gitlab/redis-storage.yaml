@@ -2,11 +2,15 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: gitlab-redis-storage
-  namespace: gitlab
+  name: {{ template "redis.fullname" . }}-storage
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
   {{- if (eq .Values.provider "gke") }}
   annotations:
-    volume.beta.kubernetes.io/storage-class: fast
+    volume.beta.kubernetes.io/storage-class: {{ template "fullname" . }}-fast
   {{- end }}
 spec:
   accessModes:

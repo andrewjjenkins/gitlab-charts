@@ -17,7 +17,7 @@
 # Optional variables
 # baseIP is an externally provisioned static IP address to use instead of the provisioned one.
 #baseIP: 1.1.1.1
-gitlabNamespace: gitlab
+nameOverride: gitlab
 # `ce` or `ee`
 gitlab: ce
 gitlabCEImage: gitlab/gitlab-ce:9.1.2-ce.0
@@ -48,7 +48,6 @@ gitlab-runner:
   gitlabUrl: http://gitlab.gitlab:8005/
   # runnerRegistrationToken must equal initialSharedRunnersRegistrationToken
   runnerRegistrationToken: "tQtCbx5UZy_ByS7FyzUH"
-  namespace: gitlab
   resources:
     limits:
       memory: 500Mi
@@ -57,5 +56,4 @@ gitlab-runner:
       memory: 500Mi
       cpu: 600m
   runners:
-    namespace: gitlab
     privileged: true

@@ -1,9 +1,10 @@
 dependencies:
 - condition: ""
   enabled: false
+  import-values: null
   name: gitlab-runner
   repository: https://charts.gitlab.io/
   tags: null
-  version: 0.1.1
-digest: sha256:3af0546c90a5695f5ea34c5dec53ed342ea9593e4066cae952368c553c5664a2
-generated: 2017-03-11T00:32:32.859720416-06:00
+  version: 0.1.2
+digest: sha256:ac184702735b24e32a5373c8b6a4d1d9a2f8c696e84b4716917fe4b8935c822f
+generated: 2017-05-18T13:34:18.366366075-07:00

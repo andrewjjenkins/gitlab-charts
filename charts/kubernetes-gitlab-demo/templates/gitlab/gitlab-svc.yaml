@@ -1,13 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: gitlab
-  namespace: gitlab
+  name: {{ template "fullname" . }}
   labels:
-    name: gitlab
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
 spec:
   selector:
-    name: gitlab
+    name: {{ template "fullname" . }}
   ports:
     - name: ssh
       port: 22

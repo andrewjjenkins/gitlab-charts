@@ -1,13 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: gitlab-redis
-  namespace: gitlab
+  name: {{ template "redis.fullname" . }}
   labels:
-    name: gitlab-redis
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
 spec:
   selector:
-    name: gitlab-redis
+    name:  {{ template "redis.fullname" . }}
   ports:
     - name: redis
       port: 6379

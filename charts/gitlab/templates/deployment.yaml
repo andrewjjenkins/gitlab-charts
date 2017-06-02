@@ -137,15 +137,17 @@ spec:
       {{- end }}
       - name: gitlab-etc
       {{- if .Values.persistence.gitlabEtc.enabled }}
+      {{- $defaultEtcClaim := printf "$s-etc" (include "fullname" .) }}
         persistentVolumeClaim:
-          claimName: {{ template "fullname" . }}-etc
+          claimName: {{ .Values.persistence.gitlabEtc.existingClaim | default $defaultEtcClaim }}
       {{- else }}
         emptyDir: {}
       {{- end }}
       - name: gitlab-data
       {{- if .Values.persistence.gitlabData.enabled }}
+      {{- $defaultDataClaim := printf "$s-data" (include "fullname" .) }}
         persistentVolumeClaim:
-          claimName: {{ template "fullname" . }}-data
+          claimName: {{ .Values.persistence.gitlabData.existingClaim | default $defaultDataClaim }}
       {{- else }}
         emptyDir: {}
       {{- end }}

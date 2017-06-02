@@ -48,3 +48,29 @@ data:
       'redis.password' => "#{ENV['REDIS_PASSWORD']}"
     }
 {{ .Values.omnibusConfigRuby | indent 4 }}
+  gitlab_backup_config: |
+    external_url ENV['EXTERNAL_URL'];
+    postgresql['enable'] = false;
+    unicorn['enable'] = false;
+    sidekiq['enable'] = false;
+    gitaly['enable'] = false;
+    gitlab_workhorse['enable'] = false;
+    gitlab_rails['db_host'] = ENV['DB_HOST'];
+    gitlab_rails['db_password'] = ENV['DB_PASSWORD'];
+    gitlab_rails['db_username'] = ENV['DB_USER'];
+    gitlab_rails['db_database'] = ENV['DB_DATABASE'];
+    gitlab_rails['auto_migrate'] = false;
+    redis['enable'] = false;
+    gitlab_rails['redis_host'] = ENV['REDIS_HOST'];
+    gitlab_rails['redis_password'] = ENV['REDIS_PASSWORD'];
+    manage_accounts['enable'] = true;
+    manage_storage_directories['manage_etc'] = false;
+    git_data_dir '/gitlab-data/git-data';
+    gitlab_rails['shared_path'] = '/gitlab-data/shared';
+    gitlab_rails['uploads_directory'] = '/gitlab-data/uploads';
+    gitlab_ci['builds_directory'] = '/gitlab-data/builds';
+    gitlab_rails['registry_path'] = '/gitlab-registry';
+    prometheus['enable'] = false
+    node_exporter['enable'] = true
+    postgres_exporter['enable'] = false
+    redis_exporter['enable'] = false

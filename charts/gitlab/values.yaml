@@ -108,7 +108,8 @@ persistence:
     ## Default: volume.alpha.kubernetes.io/storage-class: default
     ##
     # storageClass:
-    accessMode: ReadWriteOnce
+    existingClaim: update-etc-v1
+    accessMode: ReadWriteMany
   ## This volume is used to store git data and other project files.
   ## ref: https://docs.gitlab.com/omnibus/settings/configuration.html#storing-git-data-in-an-alternative-directory
   ##
@@ -119,7 +120,8 @@ persistence:
     ## Default: volume.alpha.kubernetes.io/storage-class: default
     ##
     # storageClass:
-    accessMode: ReadWriteOnce
+    existingClaim: data-etc
+    accessMode: ReadWriteMany
   gitlabRegistry:
     enabled: true
     size: 10Gi

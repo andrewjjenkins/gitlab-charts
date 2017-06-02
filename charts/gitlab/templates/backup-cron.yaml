@@ -1,0 +1,83 @@
+apiVersion: batch/v2alpha1
+kind: CronJob
+metadata:
+  name: {{ template "gitlab.fullname" . }}-backup-cron
+  labels:
+    app: {{ template "gitlab.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: {{ template "gitlab.fullname" . }}-backup-cron
+            image: {{ template "gitlab.image" . }}
+            args:
+            - /bin/sh
+            - -c
+            - gitlab-ctl reconfigure; gitlab-rake gitlab:backup:create
+            env:
+            - name: GITLAB_OMNIBUS_CONFIG
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "fullname" . }}
+                  key: gitlab_backup_config
+            - name: EXTERNAL_URL
+              value: {{ default "" .Values.externalUrl | quote }}
+            ## DB configuration
+            ##
+            - name: DB_HOST
+              value: {{ template "gitlab.dbHost" . }}
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "fullname" . }}
+                  key: db-user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "fullname" . }}
+                  key: db-password
+            - name: DB_DATABASE
+              value: {{ template "gitlab.dbDatabase" . }}
+            ## Redis configuration
+            ##
+            - name: REDIS_HOST
+              value: {{ template "gitlab.redisHost" . }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "fullname" . }}
+                  key: redis-password
+            - name: MATTERMOST_APP_UID
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "fullname" . }}
+                  key: mattermost_app_uid
+            volumeMounts:
+            - name: gitlab-etc
+              mountPath: /etc/gitlab
+            - name: gitlab-data
+              mountPath: /gitlab-data
+          volumes:
+          - name: gitlab-etc
+          {{- if .Values.persistence.gitlabEtc.enabled }}
+          {{- $defaultEtcClaim := printf "$s-etc" (include "fullname" .) }}
+            persistentVolumeClaim:
+              claimName: {{ .Values.persistence.gitlabEtc.existingClaim | default $defaultEtcClaim }}
+          {{- else }}
+            emptyDir: {}
+          {{- end }}
+          - name: gitlab-data
+          {{- if .Values.persistence.gitlabData.enabled }}
+          {{- $defaultDataClaim := printf "$s-data" (include "fullname" .) }}
+            persistentVolumeClaim:
+              claimName: {{ .Values.persistence.gitlabData.existingClaim | default $defaultDataClaim }}
+          {{- else }}
+            emptyDir: {}
+          {{- end }}
+          restartPolicy: Never

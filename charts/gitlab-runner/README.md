@@ -21,7 +21,7 @@ To install the chart with the release name `my-release` run:
 ```bash
 $ helm install --name my-release \
     --set gitlabUrl=http://gitlab.your-domain.com/,runnerRegistrationToken=your-token \
-    stable/gitlab-runner
+    gitlab/gitlab-runner
 ```
 
 Note that you _must_ pass in gitlabUrl and runnerRegistrationToken, or you'll end up with a non-functioning release.
@@ -47,13 +47,13 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 ```bash
 $ helm install --name my-release \
     --set gitlabUrl=http://gitlab.your-domain.com/,runnerRegistrationToken=your-token,concurrent=4 \
-    stable/gitlab-runner
+    gitlab/gitlab-runner
 ```
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```bash
-$ helm install --name my-release -f values.yaml stable/gitlab-runner
+$ helm install --name my-release -f values.yaml gitlab/gitlab-runner
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml)

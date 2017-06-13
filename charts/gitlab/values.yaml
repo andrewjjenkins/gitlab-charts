@@ -8,12 +8,12 @@ edition: CE
 ## GitLab CE image
 ## ref: https://hub.docker.com/r/gitlab/gitlab-ce/tags/
 ##
-ceImage: gitlab/gitlab-ce:9.1.2-ce.0
+ceImage: gitlab/gitlab-ce:9.2.2-ce.0
 
 ## GitLab EE image
 ## ref: https://hub.docker.com/r/gitlab/gitlab-ee/tags/
 ##
-eeImage: gitlab/gitlab-ee:9.1.2-ee.0
+eeImage: gitlab/gitlab-ee:9.2.2-ee.0
 
 ## Specify a imagePullPolicy
 ## 'Always' if imageTag is 'latest', else set to 'IfNotPresent'
@@ -43,6 +43,11 @@ eeImage: gitlab/gitlab-ee:9.1.2-ee.0
 ## ref: http://kubernetes.io/docs/user-guide/services/#publishing-services---service-types
 ##
 serviceType: LoadBalancer
+
+## Optional annotations for gitlab service.
+## Example use: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer-on-aws
+serviceAnnotations: {}
+  #   service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0
 
 ## Configure external service ports
 ## ref: http://kubernetes.io/docs/user-guide/services/

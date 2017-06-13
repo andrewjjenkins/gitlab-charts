@@ -22,7 +22,7 @@ spec:
         command: ["/bin/bash", "/scripts/entrypoint"]
         env:
         - name: GITLAB_URL
-          value: {{ default "" .Values.gitlabUrl | quote }}
+          value: {{ template "gitlabUrl" . }}
         - name: REGISTRATION_TOKEN
           valueFrom:
             secretKeyRef:

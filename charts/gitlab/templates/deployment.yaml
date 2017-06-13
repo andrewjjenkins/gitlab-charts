@@ -2,9 +2,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ template "gitlab.fullname" . }}
   labels:
-    app: {{ template "fullname" . }}
+    app: {{ template "gitlab.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
@@ -13,10 +13,10 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "fullname" . }}
+        app: {{ template "gitlab.fullname" . }}
     spec:
       containers:
-      - name: {{ template "fullname" . }}
+      - name: {{ template "gitlab.fullname" . }}
         image: {{ template "gitlab.image" . }}
         imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
         env:
@@ -29,7 +29,7 @@ spec:
         - name: GITLAB_OMNIBUS_CONFIG
           valueFrom:
             configMapKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ template "gitlab.fullname" . }}
               key: gitlab_omnibus_config
         {{- if default "" .Values.postReconfigureScript }}
         - name: GITLAB_POST_RECONFIGURE_SCRIPT
@@ -39,7 +39,7 @@ spec:
         {{- if default "" .Values.gitlabRootPassword }}
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ template "gitlab.fullname" . }}
               key: gitlab-root-password
         {{ end }}
         - name: EXTERNAL_URL
@@ -51,12 +51,12 @@ spec:
         - name: DB_USER
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ template "gitlab.fullname" . }}
               key: db-user
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ template "gitlab.fullname" . }}
               key: db-password
         - name: DB_DATABASE
           value: {{ template "gitlab.dbDatabase" . }}
@@ -67,17 +67,17 @@ spec:
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ template "gitlab.fullname" . }}
               key: redis-password
         - name: MATTERMOST_APP_UID
           valueFrom:
             configMapKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ template "gitlab.fullname" . }}
               key: mattermost_app_uid
         - name: MATTERMOST_APP_SECRET
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ template "gitlab.fullname" . }}
               key: mattermost_app_secret
         ports:
         - name: ssh
@@ -133,26 +133,26 @@ spec:
       {{- if default "" .Values.postReconfigureScript }}
       - name: scripts
         configMap:
-          name: {{ template "fullname" . }}-scripts
+          name: {{ template "gitlab.fullname" . }}-scripts
       {{- end }}
       - name: gitlab-etc
       {{- if .Values.persistence.gitlabEtc.enabled }}
         persistentVolumeClaim:
-          claimName: {{ template "fullname" . }}-etc
+          claimName: {{ template "gitlab.fullname" . }}-etc
       {{- else }}
         emptyDir: {}
       {{- end }}
       - name: gitlab-data
       {{- if .Values.persistence.gitlabData.enabled }}
         persistentVolumeClaim:
-          claimName: {{ template "fullname" . }}-data
+          claimName: {{ template "gitlab.fullname" . }}-data
       {{- else }}
         emptyDir: {}
       {{- end }}
       - name: gitlab-registry
       {{- if .Values.persistence.gitlabRegistry.enabled }}
         persistentVolumeClaim:
-          claimName: {{ template "fullname" . }}-registry
+          claimName: {{ template "gitlab.fullname" . }}-registry
       {{- else }}
         emptyDir: {}
       {{- end }}

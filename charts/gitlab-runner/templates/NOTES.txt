@@ -1,6 +1,6 @@
 {{- if default "" .Values.gitlabUrl }}
 {{- if default "" .Values.runnerRegistrationToken }}
-Your GitLab Runner should now be registered against the GitLab instance reachable at: {{ .Values.gitlabUrl }}
+Your GitLab Runner should now be registered against the GitLab instance reachable at: {{ template "gitlabUrl" . }}
 {{- else -}}
 ##############################################################################
 ## WARNING: You did not specify an runnerRegistrationToken in your 'helm install' call. ##

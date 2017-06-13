@@ -45,7 +45,7 @@ healthCheckToken: 'SXBAQichEJasbtDSygrD'
 
 gitlab-runner:
   checkInterval: 1
-  gitlabUrl: http://gitlab.gitlab:8005/
+  gitlabUrl: http://%s-gitlab.%s:8005/
   # runnerRegistrationToken must equal initialSharedRunnersRegistrationToken
   runnerRegistrationToken: "tQtCbx5UZy_ByS7FyzUH"
   resources:

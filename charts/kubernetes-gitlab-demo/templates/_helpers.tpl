@@ -32,3 +32,14 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- printf "%s-%-s-%s" .Release.Name $name "redis" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{/*
+Template for outputing the gitlabUrl
+*/}}
+{{- define "gitlabUrl" -}}
+{{- if .Values.gitlabUrl -}}
+{{- .Values.gitlabUrl | quote -}}
+{{- else -}}
+{{- printf "http://%s-gitlab.%s:8005/" .Release.Name .Release.Namespace | quote -}}
+{{- end -}}
+{{- end -}}

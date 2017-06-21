@@ -1,4 +1,4 @@
-{{- if and (default "" .Values.baseDomain) (default "" .Values.legoEmail) (default "" (index .Values "gitlab-runner").gitlabUrl) }}
+{{- if and (default "" .Values.baseDomain) (default "" .Values.legoEmail) }}
   It may take several minutes for GitLab to reconfigure.
   You can watch the status by running `kubectl get deployment -w {{ template "fullname" . }} --namespace {{ .Release.Namespace }}
 

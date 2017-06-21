@@ -16,12 +16,8 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
-Support printf string input for gitlabUrl
-Only currently supported are releasename as first argument, namespace as second
-ex: "http://%s-gitlab.%s"
-    "http://gitlab.%[2]s"
+Template for outputing the gitlabUrl
 */}}
 {{- define "gitlabUrl" -}}
-{{- $gitlabUrl := default "" .Values.gitlabUrl | quote -}}
-{{- printf $gitlabUrl .Release.Name .Release.Namespace -}}
+{{- .Values.gitlabUrl | quote -}}
 {{- end -}}

@@ -4,8 +4,9 @@ data:
   proxy-read-timeout: "600"
   proxy-send-timeout: "600"
   hsts-include-subdomains: "false"
-  body-size: "512m"
+  proxy-body-size: "1024m"
   server-name-hash-bucket-size: "256"
+  enable-vts-status: "true"
 kind: ConfigMap
 metadata:
   namespace: nginx-ingress

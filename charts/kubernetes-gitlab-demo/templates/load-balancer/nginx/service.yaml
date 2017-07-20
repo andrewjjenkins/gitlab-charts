@@ -19,3 +19,37 @@ spec:
     name: git
   selector:
     app: nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-stats
+  namespace: nginx-ingress
+  annotations:
+    service.beta.kubernetes.io/external-traffic: "OnlyLocal"
+spec:
+  type: ClusterIP
+  clusterIP: ""
+  ports:
+  - port: 18080
+    targetPort: 18080
+    name: stats
+  selector:
+    app: nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-metrics
+  namespace: nginx-ingress
+  annotations:
+    service.beta.kubernetes.io/external-traffic: "OnlyLocal"
+spec:
+  type: ClusterIP
+  clusterIP: ""
+  ports:
+  - port: 9913
+    targetPort: 9913
+    name: metrics
+  selector:
+    app: nginx

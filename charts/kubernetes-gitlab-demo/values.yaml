@@ -20,8 +20,8 @@
 gitlabNamespace: gitlab
 # `ce` or `ee`
 gitlab: ce
-gitlabCEImage: gitlab/gitlab-ce:9.3.0-ce.0
-gitlabEEImage: gitlab/gitlab-ee:9.3.0-ee.0
+gitlabCEImage: gitlab/gitlab-ce:9.4.3-ce.0
+gitlabEEImage: gitlab/gitlab-ee:9.4.3-ee.0
 postgresPassword: NDl1ZjNtenMxcWR6NXZnbw==
 initialSharedRunnersRegistrationToken: "tQtCbx5UZy_ByS7FyzUH"
 mattermostAppSecret: NDl1ZjNtenMxcWR6NXZnbw==
@@ -36,7 +36,7 @@ postgresStorageSize: 30Gi
 gitlabRailsStorageSize: 30Gi
 gitlabRegistryStorageSize: 30Gi
 gitlabConfigStorageSize: 1Gi
-gitlabRunnerImage: gitlab/gitlab-runner:alpine-v9.3.0
+gitlabRunnerImage: gitlab/gitlab-runner:alpine-v9.4.1
 # Valid values for provider are `gke` for Google Container Engine. Leaving it blank (or any othervalue) will disable fast disk options.
 provider: gke
 healthCheckToken: 'SXBAQichEJasbtDSygrD'

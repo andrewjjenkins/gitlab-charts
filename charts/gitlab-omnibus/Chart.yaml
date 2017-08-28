@@ -1,7 +1,7 @@
 apiVersion: v1
 description: GitLab running on Kubernetes suitable for demos
 name: gitlab-omnibus
-version: 0.1.30
+version: 0.1.31
 tillerVersion: ">=2.5.0"
 keywords:
 - git

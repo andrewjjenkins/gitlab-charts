@@ -26,3 +26,27 @@ $ helm upgrade {{ .Release.Name }} \
   --set baseDomain=example.com,gitlab-runner.gitlabUrl=https://gitlab.example.com,legoEmail=you@example.com \
   gitlab/kubernetes-gitlab-demo
 {{- end -}}
+{{- if eq .Values.provider "minikube" }}
+
+####################################################################################################
+## IMPORTANT for Minikube setup
+#####################################################################################################
+Since we don't have public IP addresses when using minikube, please update the kube-dns config with below command.
+---------------------------------------------------------
+tee ./kube-dns-configmap.yaml <<-'EOF'
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kube-dns
+  namespace: kube-system
+data:
+  stubDomains: |
+    {
+      "{{ .Values.baseDomain }}": ["192.168.99.1"],
+      "{{ .Values.ngrokHostname }}": ["192.168.99.1"]
+    }
+EOF
+
+kubectl apply -f ./kube-dns-configmap.yaml
+---------------------------------------------------------
+{{- end }}

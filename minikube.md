@@ -52,7 +52,7 @@ More detailed information is available at [Minikube website](https://kubernetes.
         sudo brew services restart dnsmasq
         ```
         
-* Start ngrok in a different window and keep it open until the whole demo process is verified to work. Note down the dynamic hostname in the output which will be used for NGROK_HOSTNAME in later steps.
+* Start ngrok in a different window and keep it open until the whole demo process is verified to work. Note down the dynamic hostname in the output which will be used in later steps.
 
     ```
     ngrok http demo.io:80
@@ -63,7 +63,7 @@ More detailed information is available at [Minikube website](https://kubernetes.
 * Go to the working directory with the code checked out from this project and run the command to generate the yaml file.
 
     ```
-    helm install --name gitlab --set provider=minikube,baseDomain=<your demo domain>,baseIP=$(minikube ip),legoEmail=<valid email address>,ngrokHostname=<dynamic ngrok hostname from above> gitlab/gitlab-omnibus
+    helm install --name gitlab --set provider=minikube,baseDomain=<your demo domain>,baseIP=$(minikube ip),legoEmail=<valid email address>,ngrokHostname=<dynamic ngrok hostname> gitlab/gitlab-omnibus
     ```
     
 * Run additional commands per the end of screent output from above command to fix the DNS issue inside the pods. Below is a sample.
@@ -82,7 +82,6 @@ data:
       "834c0399.ngrok.io": ["192.168.99.1"]
     }
 EOF
-
 kubectl apply -f ./kube-dns-configmap.yaml
     ```
     
@@ -100,12 +99,12 @@ kubectl apply -f ./kube-dns-configmap.yaml
 * Check the cluster ip address for nginx service by running the command below or you can check it from dashboard
 
     ```
-    kubectl get services --namespace nginx-ingress
+    kubectl get services --namespace nginx
     ```
 * Update the DNSmasq entry with the ngrok dynamic hostname and cluster ip address to make the registry traffic inside the cluster.
 
     ```
-    address=/<ngrok dynamic hostname>/<cluster ip address for nginx>
+    address=/<dynamic ngrok hostname>/<cluster ip address for nginx>
     ```
     Then restart the DNSmasq service again.
     ```

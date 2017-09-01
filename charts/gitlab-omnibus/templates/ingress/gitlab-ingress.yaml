@@ -14,7 +14,11 @@ spec:
   tls:
   - hosts:
     - gitlab.{{ .Values.baseDomain }}
+{{- if eq .Values.provider "minikube" }}
+    - {{ .Values.ngrokHostname }}
+{{- else }}
     - registry.{{ .Values.baseDomain }}
+{{- end }}
     - mattermost.{{ .Values.baseDomain }}
     - prometheus.{{ .Values.baseDomain }}
     secretName: gitlab-tls
@@ -26,7 +30,11 @@ spec:
         backend:
           serviceName: {{ template "fullname" . }}
           servicePort: 8005
+{{- if eq .Values.provider "minikube" }}
+  - host: {{ .Values.ngrokHostname }}
+{{- else }}
   - host: registry.{{ .Values.baseDomain }}
+{{- end }}
     http:
       paths:
       - path: /

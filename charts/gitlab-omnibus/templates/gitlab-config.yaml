@@ -8,11 +8,20 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 data:
+{{- if eq .Values.provider "minikube" }}
+  external_scheme: http
+{{- else }}
   external_scheme: https
+{{- end }}
   external_hostname: gitlab.{{ .Values.baseDomain }}
   registry_external_scheme: https
+{{- if eq .Values.provider "minikube" }}
+  registry_external_hostname: {{ .Values.ngrokHostname }}
+  mattermost_external_scheme: http
+{{- else }}
   registry_external_hostname: registry.{{ .Values.baseDomain }}
   mattermost_external_scheme: https
+{{- end }}
   mattermost_external_hostname: mattermost.{{ .Values.baseDomain }}
   mattermost_app_uid: {{ .Values.mattermostAppUID }}
   postgres_user: gitlab

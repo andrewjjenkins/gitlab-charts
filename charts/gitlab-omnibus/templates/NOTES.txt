@@ -33,7 +33,7 @@ $ helm upgrade {{ .Release.Name }} \
 #####################################################################################################
 Since we don't have public IP addresses when using minikube, please update the kube-dns config with below command.
 ---------------------------------------------------------
-tee ./kube-dns-configmap.yaml <<-'EOF'
+cat <<EOF | kubectl apply --force -f -
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -46,7 +46,5 @@ data:
       "{{ .Values.ngrokHostname }}": ["192.168.99.1"]
     }
 EOF
-
-kubectl apply -f ./kube-dns-configmap.yaml
 ---------------------------------------------------------
 {{- end }}

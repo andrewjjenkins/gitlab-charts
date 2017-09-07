@@ -68,8 +68,8 @@ More detailed information is available at [Minikube website](https://kubernetes.
     
 * Run additional commands per the end of screent output from above command to fix the DNS issue inside the pods. Below is a sample.
 
-    ```
-tee ./kube-dns-configmap.yaml <<-'EOF'
+    ```shell
+cat <<EOF | kubectl apply --force -f -
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -82,7 +82,6 @@ data:
       "834c0399.ngrok.io": ["192.168.99.1"]
     }
 EOF
-kubectl apply -f ./kube-dns-configmap.yaml
     ```
     
 * Check the progress untill all pods are up and running.

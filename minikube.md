@@ -25,6 +25,24 @@ More detailed information is available at [Minikube website](https://kubernetes.
 
 ### Preparation
 * Understand and install Minikube per documentation [here](https://gitlab.com/charts/helm.gitlab.io/tree/master/doc/minikube). 
+* Config addons of Minikube
+ * Enable "default-storageclass"
+ 
+        ```
+        minikube addons enable default-storageclass
+        ```
+        
+ * Enable "kube-dns"
+ 
+        ```
+        minikube addons enable kube-dns
+        ```
+        
+ * Disable "ingress"
+ 
+        ```
+        minikube addons disable ingress
+        ```
 * Install [DNSMasq](http://www.thekelleys.org.uk/dnsmasq/doc.html) for Mac or [Acrylic](http://mayakron.altervista.org/wikibase/show.php?id=AcrylicHome) for Windows
 * Config DNSMasq or Acrylic to resolve only your target demo domain. See example and instructions at [another demo project](https://gitlab.com/xiaogang_gitlab/demo-vagrant#setup-instructions).
 * Install [ngrok](https://ngrok.com/)

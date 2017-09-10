@@ -34,10 +34,22 @@ spec:
           timeoutSeconds: 5
         ports:
         - containerPort: 80
+{{- if eq .Values.provider "minikube" }}
+          hostPort: 80
+{{- end }}
         - containerPort: 443
+{{- if eq .Values.provider "minikube" }}
+          hostPort: 443
+{{- end }}
         - containerPort: 22
         - containerPort: 18080
+{{- if eq .Values.provider "minikube" }}
+          hostPort: 18080
+{{- end }}
         - containerPort: 10254
+{{- if eq .Values.provider "minikube" }}
+          hostPort: 10254
+{{- end }}
         args:
         - /nginx-ingress-controller
         - --default-backend-service=nginx-ingress/default-http-backend

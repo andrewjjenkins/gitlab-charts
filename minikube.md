@@ -81,7 +81,7 @@ More detailed information is available at [Minikube website](https://kubernetes.
 * Go to the working directory with the code checked out from this project and run the command to generate the yaml file.
 
     ```
-    helm install --name gitlab --set provider=minikube,baseDomain=<your demo domain>,baseIP=$(minikube ip),legoEmail=<valid email address>,ngrokHostname=<dynamic ngrok hostname> gitlab/gitlab-omnibus
+    helm install --name gitlab --set provider=minikube,baseDomain=<your demo domain>,baseIP=$(minikube ip),legoEmail=<valid email address>,ngrokHostname=<dynamic ngrok hostname> charts/gitlab-omnibus
     ```
     
 * Run additional commands per the end of screent output from above command to fix the DNS issue inside the pods. Below is a sample.
@@ -102,6 +102,9 @@ data:
 EOF
     ```
     
+    Another option may be to disable the kube-dns addon of Minikube and deploy it with config via Helm chart.
+ 
+        
 * Check the progress untill all pods are up and running.
     
     ```

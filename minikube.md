@@ -145,6 +145,14 @@ EOF
     ```
 * Open a browser window and point it to `gitlab.<demo domain>` then go through the [Gitlab Idea to Production Demo](https://about.gitlab.com/handbook/sales/demo/). Everything should work except Promethus monitoring of the environment due to the limitation of Minikube.
 
+## Tips
+
+* To make it work fully "offline", you may want to push the required Docker images to the registry on your Gitlab instance and update the files in the demo repo respectively.
+ * registry.gitlab.com/gitlab-examples/kubernetes-deploy
+ * ruby:2.4.0-alpine
+ 
+    It can also help to speed up the process of spinning up the runner environment and Docker image build process.
+
 ## Trouble shooting
 
 TBA

@@ -147,6 +147,7 @@ EOF
 
 ## Tips
 
+* Due to the limit resource of your own machine, this may **NOT** work for an online demo when screensharing is on with Webex or Zoom.
 * To make it work fully "offline", you may want to push the required Docker images to the registry on your Gitlab instance and update the files in the demo repo respectively.
  * registry.gitlab.com/gitlab-examples/kubernetes-deploy
  * ruby:2.4.0-alpine

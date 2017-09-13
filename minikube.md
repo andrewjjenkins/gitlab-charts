@@ -84,7 +84,7 @@ More detailed information is available at [Minikube website](https://kubernetes.
     helm install --name gitlab --set provider=minikube,baseDomain=<your demo domain>,baseIP=$(minikube ip),legoEmail=<valid email address>,ngrokHostname=<dynamic ngrok hostname> charts/gitlab-omnibus
     ```
     
-* Run additional commands per the end of screent output from above command to fix the DNS issue inside the pods. Below is a sample.
+* Run additional commands per the end of screent output from above command to fix the DNS issue inside the pods. Below is a sample. The IP address of the local DNS server may vary according to different virtual machine driver and also the ngrok hostname needs to be updated to the one that you get.
 
     ```shell
 cat <<EOF | kubectl apply --force -f -

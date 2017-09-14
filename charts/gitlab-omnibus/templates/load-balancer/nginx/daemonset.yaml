@@ -15,7 +15,11 @@ spec:
       containers:
       - image: gcr.io/google_containers/nginx-ingress-controller:0.9.0-beta.11
         name: nginx
+{{- if eq .Values.provider "minikube" }}
+        imagePullPolicy: IfNotPresent
+{{- else }}
         imagePullPolicy: Always
+{{- end }}
         env:
           - name: POD_NAME
             valueFrom:

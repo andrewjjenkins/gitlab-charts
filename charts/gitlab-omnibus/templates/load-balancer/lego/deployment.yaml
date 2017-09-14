@@ -13,7 +13,11 @@ spec:
       containers:
       - name: kube-lego
         image: jetstack/kube-lego:0.1.3
+{{- if eq .Values.provider "minikube" }}
+        imagePullPolicy: IfNotPresent
+{{- else }}
         imagePullPolicy: Always
+{{- end }}
         ports:
         - containerPort: 8080
         env:

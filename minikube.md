@@ -73,7 +73,7 @@ More detailed information is available at [Minikube website](https://kubernetes.
 * Start ngrok in a different window and keep it open until the whole demo process is verified to work. Note down the dynamic hostname in the output which will be used in later steps.
 
     ```
-    ngrok http demo.io:80
+    ngrok http gitlab.demo.io:80
     ```
     
 * Install and initialize Helm by referring instructions at [Installing GitLab on Kubernetes](https://docs.gitlab.com/ee/install/kubernetes/index.html). 

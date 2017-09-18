@@ -24,7 +24,7 @@ More detailed information is available at [Minikube website](https://kubernetes.
 ## Detailed instructions to setup
 
 ### Preparation
-* Understand and install Minikube per documentation [here](https://gitlab.com/charts/helm.gitlab.io/tree/master/doc/minikube). 
+* Understand and install Minikube per documentation [here](https://gitlab.com/charts/helm.gitlab.io/tree/master/doc/minikube). On Windows platfrom since there's a [known problem](https://github.com/kubernetes/helm/issues/2252) with Helm support on Windows, please consider to [setup Minikube inside a Linux VM via Vagrant](https://gitlab.com/xiaogang_gitlab/vm_minikube_helm_vagrant) and use "none" for "vm-driver".
 * Config addons of Minikube
  * Enable "default-storageclass"
  

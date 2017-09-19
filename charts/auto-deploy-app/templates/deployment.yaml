@@ -3,16 +3,16 @@ kind: Deployment
 metadata:
   name: {{ template "fullname" . }}
   labels:
-    app: {{ template "appname" . }}
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     track: "{{ .Values.application.track }}"
     tier: "{{ .Values.application.tier }}"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
   replicas: {{ .Values.replicaCount }}
   template:
     metadata:
       labels:
-        app: {{ template "appname" . }}
+        app: {{ template "name" . }}
         track: "{{ .Values.application.track }}"
         tier: "{{ .Values.application.tier }}"
     spec:
